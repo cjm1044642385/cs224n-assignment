@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 #!/usr/bin/env python
 
 import numpy as np
@@ -40,13 +41,28 @@ def forward_backward_prop(X, labels, params, dimensions):
 
     # Note: compute cost based on `sum` not `mean`.
     ### YOUR CODE HERE: forward propagation
-    raise NotImplementedError
+    # a1 = z1 = X
+    z2 = np.dot(X, W1) + b1
+    a2 = sigmoid(z2)
+    z3 = np.dot(a2, W2) + b2
+    a3 = softmax(z3)
+    cost = -np.sum(np.log(np.sum(a3 * labels, 1))) # a3 * labels是矩阵点乘
     ### END YOUR CODE
 
     ### YOUR CODE HERE: backward propagation
-    raise NotImplementedError
-    ### END YOUR CODE
+    # 作业题2（b），其实就是给出了delta3的求法。
+    delta3 = a3 - labels
+    # 按照 https://www.cnblogs.com/royhoo/p/9149172.html 给出的公式计算。不过在代码里面，参数矩阵的行列，与文章里面刚好相反。
+    delta2 = sigmoid_grad(a2) * np.dot(delta3, W2.T)
+    gradb2 = np.sum(delta3, 0)
+    gradb1 = np.sum(delta2, 0)
+    gradW2 = np.zeros([H, Dy])
+    gradW1 = np.zeros([Dx, H])
+    for i in range(0, X.shape[0]):
+        gradW2 = gradW2 + np.dot(a2[i].reshape(-1, 1), delta3[i].reshape(-1, 1).T)
+        gradW1 = gradW1 + np.dot(X[i].reshape(-1, 1), delta2[i].reshape(-1, 1).T)
 
+    ### END YOUR CODE
     ### Stack gradients (do not modify)
     grad = np.concatenate((gradW1.flatten(), gradb1.flatten(),
         gradW2.flatten(), gradb2.flatten()))
@@ -84,10 +100,21 @@ def your_sanity_checks():
     """
     print "Running your sanity checks..."
     ### YOUR CODE HERE
-    raise NotImplementedError
+    N = 20
+    dimensions = [10, 5, 10]
+    data = np.random.randn(N, dimensions[0])  # each row will be a datum
+    labels = np.zeros((N, dimensions[2]))
+    for i in xrange(N):
+        labels[i, random.randint(0, dimensions[2] - 1)] = 1
+
+    params = np.random.randn((dimensions[0] + 1) * dimensions[1] + (
+        dimensions[1] + 1) * dimensions[2], )
+
+    cost = forward_backward_prop(data, labels, params, dimensions)
+    print cost
     ### END YOUR CODE
 
 
 if __name__ == "__main__":
     sanity_check()
-    your_sanity_checks()
+    # your_sanity_checks()
