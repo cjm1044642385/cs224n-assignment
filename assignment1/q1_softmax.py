@@ -34,7 +34,7 @@ def softmax(x):
         ### YOUR CODE HERE
         x = x - np.max(x, 1).reshape(-1 ,1) # 每个元素都减去所在列对应的最大值
         x_exp = np.exp(x)
-        x = x_exp / np.sum(x_exp, 1)
+        x = x_exp / np.sum(x_exp, 1).reshape(-1 ,1)
         ### END YOUR CODE
     else:
         # Vector
@@ -91,9 +91,11 @@ def test_softmax():
     # 测试矩阵
     test2 = softmax(np.array([[1001, 1002], [3, 4]]))
     print test2
+    test3 = softmax(np.random.randn(20,10))
+    print test3
     ### END YOUR CODE
 
 
 if __name__ == "__main__":
-    test_softmax_basic()
-    # test_softmax()
+    # test_softmax_basic()
+    test_softmax()
