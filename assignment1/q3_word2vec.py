@@ -210,8 +210,6 @@ def cbow(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
 
 def word2vec_sgd_wrapper(word2vecModel, tokens, wordVectors, dataset, C,
                          word2vecCostAndGradient=softmaxCostAndGradient):
-    random.seed(31415)
-    np.random.seed(9265)
     batchsize = 50
     cost = 0.0
     grad = np.zeros(wordVectors.shape)
@@ -255,6 +253,7 @@ def test_word2vec():
     dummy_vectors = normalizeRows(np.random.randn(10,3))
     dummy_tokens = dict([("a",0), ("b",1), ("c",2),("d",3),("e",4)])
     print "==== Gradient check for skip-gram ===="
+    print "==== 梯度检查想运行通过，需要在word2vec_sgd_wrapper开头增加random.seed(31415)、np.random.seed(9265)两行代码 ===="
     gradcheck_naive(lambda vec: word2vec_sgd_wrapper(
         skipgram, dummy_tokens, vec, dataset, 5, softmaxCostAndGradient),
         dummy_vectors)
