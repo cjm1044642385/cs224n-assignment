@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 #!/usr/bin/env python
 
 import argparse
@@ -49,7 +50,8 @@ def getSentenceFeatures(tokens, wordVectors, sentence):
     sentVector = np.zeros((wordVectors.shape[1],))
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    for i in sentence:
+        sentVector += wordVectors[tokens.get(i)]
     ### END YOUR CODE
 
     assert sentVector.shape == (wordVectors.shape[1],)
@@ -63,7 +65,7 @@ def getRegularizationValues():
     """
     values = None   # Assign a list of floats in the block below
     ### YOUR CODE HERE
-    raise NotImplementedError
+    values = [0.01, 0.03, 0.1, 0.3, 1, 3]
     ### END YOUR CODE
     return sorted(values)
 
@@ -89,7 +91,12 @@ def chooseBestModel(results):
     bestResult = None
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    # 为什么注释的第一行说，基于训练集的表现选择最优模型呀？不应该是基于测试集选择吗？
+    for i in results:
+        if bestResult is None:
+            bestResult = i
+        if i.get("test") > bestResult.get("test"):
+            bestResult = i
     ### END YOUR CODE
 
     return bestResult
